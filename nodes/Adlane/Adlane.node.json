@@ -1,0 +1,20 @@
+{
+  "node": "n8n-nodes-adlane.adlane",
+  "nodeVersion": "1.0",
+  "codexVersion": "1.0",
+  "categories": [
+    "Productivity"
+  ],
+  "resources": {
+    "credentialDocumentation": [
+      {
+        "url": "https://github.com/adlane-app/n8n-nodes-adlane#authentication"
+      }
+    ],
+    "primaryDocumentation": [
+      {
+        "url": "https://github.com/adlane-app/n8n-nodes-adlane#readme"
+      }
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "displayName": "Operation",
+    "name": "operation",
+    "type": "options",
+    "noDataExpression": true,
+    "options": [
+      {
+        "name": "Get Campaign Details",
+        "value": "get_campaign_details",
+        "description": "Browse campaign status and configuration in an owned connected account. Follow pagination to find a campaign; no changes are made",
+        "action": "Get Campaign Details in Adlane"
+      },
+      {
+        "name": "Get Campaign Performance",
+        "value": "get_campaign_performance",
+        "description": "Read campaign metrics for explicit inclusive dates in account timezone. Google costs are micros; Meta spend is in account currency. Conversions are attributed and may overlap between providers. Follow the returned cursor",
+        "action": "Get Campaign Performance in Adlane"
+      },
+      {
+        "name": "Get Profile",
+        "value": "get_profile",
+        "description": "Read the signed-in customer's own Adlane account profile. Does not search for or identify other people",
+        "action": "Get Profile in Adlane"
+      },
+      {
+        "name": "List Ad Accounts",
+        "value": "list_ad_accounts",
+        "description": "Read your connected advertising accounts with currency and timezone. Choose an account ID before requesting reports",
+        "action": "List Ad Accounts in Adlane"
+      },
+      {
+        "name": "List Workspaces",
+        "value": "list_workspaces",
+        "description": "List up to 100 advertising workspaces owned by the signed-in account. Does not fetch advertising reports or change campaigns",
+        "action": "List Workspaces in Adlane"
+      }
+    ],
+    "default": "get_profile"
+  },
+  {
+    "displayName": "Account Id",
+    "name": "get_campaign_details__accountId",
+    "type": "string",
+    "default": "",
+    "required": true,
+    "description": "The account id for this operation",
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_details"
+        ]
+      }
+    }
+  },
+  {
+    "displayName": "Additional Fields",
+    "name": "options_get_campaign_details",
+    "type": "collection",
+    "placeholder": "Add Field",
+    "default": {},
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_details"
+        ]
+      }
+    },
+    "options": [
+      {
+        "displayName": "Cursor",
+        "name": "cursor",
+        "type": "string",
+        "default": "",
+        "description": "The cursor for this operation"
+      }
+    ]
+  },
+  {
+    "displayName": "Account Id",
+    "name": "get_campaign_performance__accountId",
+    "type": "string",
+    "default": "",
+    "required": true,
+    "description": "The account id for this operation",
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_performance"
+        ]
+      }
+    }
+  },
+  {
+    "displayName": "Start Date",
+    "name": "get_campaign_performance__startDate",
+    "type": "string",
+    "default": "",
+    "required": true,
+    "description": "The start date for this operation",
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_performance"
+        ]
+      }
+    }
+  },
+  {
+    "displayName": "End Date",
+    "name": "get_campaign_performance__endDate",
+    "type": "string",
+    "default": "",
+    "required": true,
+    "description": "The end date for this operation",
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_performance"
+        ]
+      }
+    }
+  },
+  {
+    "displayName": "Additional Fields",
+    "name": "options_get_campaign_performance",
+    "type": "collection",
+    "placeholder": "Add Field",
+    "default": {},
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "get_campaign_performance"
+        ]
+      }
+    },
+    "options": [
+      {
+        "displayName": "Campaign Id",
+        "name": "campaignId",
+        "type": "string",
+        "default": "",
+        "description": "The campaign id for this operation"
+      },
+      {
+        "displayName": "Cursor",
+        "name": "cursor",
+        "type": "string",
+        "default": "",
+        "description": "The cursor for this operation"
+      }
+    ]
+  },
+  {
+    "displayName": "Additional Fields",
+    "name": "options_list_ad_accounts",
+    "type": "collection",
+    "placeholder": "Add Field",
+    "default": {},
+    "displayOptions": {
+      "show": {
+        "operation": [
+          "list_ad_accounts"
+        ]
+      }
+    },
+    "options": [
+      {
+        "displayName": "Offset",
+        "name": "offset",
+        "type": "number",
+        "default": 0,
+        "description": "The offset for this operation",
+        "typeOptions": {
+          "minValue": 0,
+          "maxValue": 10000,
+          "numberPrecision": 0
+        }
+      }
+    ]
+  }
+]
