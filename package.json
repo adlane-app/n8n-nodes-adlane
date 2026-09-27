@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-adlane",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "n8n community node for Adlane: OAuth account connection and 5 workflow operations.",
   "license": "MIT",
   "homepage": "https://adlane.app",
@@ -14,7 +14,7 @@
   "author": {
     "name": "Adlane",
     "url": "https://adlane.app",
-    "email": "codex@users.noreply.github.com"
+    "email": "saeedmshdi@gmail.com"
   },
   "repository": {
     "type": "git",
