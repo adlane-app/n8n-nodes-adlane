@@ -1,0 +1,22 @@
+{
+  "get_profile": {
+    "method": "GET",
+    "path": "/v1/account"
+  },
+  "list_workspaces": {
+    "method": "GET",
+    "path": "/v1/workspaces"
+  },
+  "list_ad_accounts": {
+    "method": "GET",
+    "path": "/v1/ad-accounts"
+  },
+  "get_campaign_details": {
+    "method": "GET",
+    "path": "/v1/ad-accounts/:accountId/campaigns"
+  },
+  "get_campaign_performance": {
+    "method": "GET",
+    "path": "/v1/ad-accounts/:accountId/performance"
+  }
+}
