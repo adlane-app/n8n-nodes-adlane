@@ -1,5 +1,48 @@
 [
   {
+    "displayName": "Resource",
+    "name": "resource",
+    "type": "options",
+    "noDataExpression": true,
+    "options": [
+      {
+        "name": "Account",
+        "value": "account"
+      },
+      {
+        "name": "Advertising Account",
+        "value": "ad-accounts"
+      },
+      {
+        "name": "Workspace",
+        "value": "workspaces"
+      }
+    ],
+    "default": "account"
+  },
+  {
+    "displayName": "Operation",
+    "name": "operation",
+    "type": "options",
+    "noDataExpression": true,
+    "options": [
+      {
+        "name": "Get Profile",
+        "value": "get_profile",
+        "description": "Read the signed-in customer's own Adlane account profile. Does not search for or identify other people",
+        "action": "Get Profile in Adlane"
+      }
+    ],
+    "default": "get_profile",
+    "displayOptions": {
+      "show": {
+        "resource": [
+          "account"
+        ]
+      }
+    }
+  },
+  {
     "displayName": "Operation",
     "name": "operation",
     "type": "options",
@@ -18,17 +61,27 @@
         "action": "Get Campaign Performance in Adlane"
       },
       {
-        "name": "Get Profile",
-        "value": "get_profile",
-        "description": "Read the signed-in customer's own Adlane account profile. Does not search for or identify other people",
-        "action": "Get Profile in Adlane"
-      },
-      {
         "name": "List Ad Accounts",
         "value": "list_ad_accounts",
         "description": "Read your connected advertising accounts with currency and timezone. Choose an account ID before requesting reports",
         "action": "List Ad Accounts in Adlane"
-      },
+      }
+    ],
+    "default": "get_campaign_details",
+    "displayOptions": {
+      "show": {
+        "resource": [
+          "ad-accounts"
+        ]
+      }
+    }
+  },
+  {
+    "displayName": "Operation",
+    "name": "operation",
+    "type": "options",
+    "noDataExpression": true,
+    "options": [
       {
         "name": "List Workspaces",
         "value": "list_workspaces",
@@ -36,7 +89,14 @@
         "action": "List Workspaces in Adlane"
       }
     ],
-    "default": "get_profile"
+    "default": "list_workspaces",
+    "displayOptions": {
+      "show": {
+        "resource": [
+          "workspaces"
+        ]
+      }
+    }
   },
   {
     "displayName": "Account Id",
@@ -49,6 +109,9 @@
       "show": {
         "operation": [
           "get_campaign_details"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     }
@@ -63,6 +126,9 @@
       "show": {
         "operation": [
           "get_campaign_details"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     },
@@ -87,6 +153,9 @@
       "show": {
         "operation": [
           "get_campaign_performance"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     }
@@ -102,6 +171,9 @@
       "show": {
         "operation": [
           "get_campaign_performance"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     }
@@ -117,6 +189,9 @@
       "show": {
         "operation": [
           "get_campaign_performance"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     }
@@ -131,6 +206,9 @@
       "show": {
         "operation": [
           "get_campaign_performance"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     },
@@ -161,6 +239,9 @@
       "show": {
         "operation": [
           "list_ad_accounts"
+        ],
+        "resource": [
+          "ad-accounts"
         ]
       }
     },

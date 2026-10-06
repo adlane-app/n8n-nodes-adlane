@@ -30,7 +30,7 @@ export class Adlane implements INodeType {
   async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
     return executeOperations(
       this,
-      "https://mcp.adlane.app",
+      "https://adlane.app",
       "adlaneOAuth2Api",
       operations as unknown as Operation[],
       routes as Record<string,ResourceRoute>,
