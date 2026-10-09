@@ -1,136 +1,130 @@
 [
-  {
-    "name": "get_campaign_details",
-    "title": "Read campaign configuration",
-    "description": "Browse campaign status and configuration in an owned connected account. Follow pagination to find a campaign; no changes are made.",
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "cursor": {
-          "type": "string",
-          "maxLength": 2048
-        }
-      },
-      "required": [
-        "accountId"
-      ],
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
-    },
-    "annotations": {
-      "title": "Read campaign configuration",
-      "readOnlyHint": true,
-      "destructiveHint": false,
-      "idempotentHint": true,
-      "openWorldHint": false
-    }
-  },
-  {
-    "name": "get_campaign_performance",
-    "title": "Read campaign performance",
-    "description": "Read campaign metrics for explicit inclusive dates in account timezone. Google costs are micros; Meta spend is in account currency. Conversions are attributed and may overlap between providers. Follow the returned cursor.",
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "startDate": {
-          "type": "string",
-          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-        },
-        "endDate": {
-          "type": "string",
-          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-        },
-        "campaignId": {
-          "type": "string",
-          "pattern": "^\\d{1,30}$"
-        },
-        "cursor": {
-          "type": "string",
-          "maxLength": 2048
-        }
-      },
-      "required": [
-        "accountId",
-        "startDate",
-        "endDate"
-      ],
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
-    },
-    "annotations": {
-      "title": "Read campaign performance",
-      "readOnlyHint": true,
-      "destructiveHint": false,
-      "idempotentHint": true,
-      "openWorldHint": false
-    }
-  },
-  {
-    "name": "get_profile",
-    "title": "Read your Adlane profile",
-    "description": "Read the signed-in customer's own Adlane account profile. Does not search for or identify other people.",
-    "inputSchema": {
-      "type": "object",
-      "properties": {},
-      "additionalProperties": false
-    },
-    "annotations": {
-      "title": "Read your Adlane profile",
-      "readOnlyHint": true,
-      "destructiveHint": false,
-      "idempotentHint": true,
-      "openWorldHint": false
-    }
-  },
-  {
-    "name": "list_ad_accounts",
-    "title": "List connected ad accounts",
-    "description": "Read your connected advertising accounts with currency and timezone. Choose an account ID before requesting reports.",
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "offset": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 10000,
-          "default": 0
-        }
-      },
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
-    },
-    "annotations": {
-      "title": "List connected ad accounts",
-      "readOnlyHint": true,
-      "destructiveHint": false,
-      "idempotentHint": true,
-      "openWorldHint": false
-    }
-  },
-  {
-    "name": "list_workspaces",
-    "title": "List your Adlane workspaces",
-    "description": "List up to 100 advertising workspaces owned by the signed-in account. Does not fetch advertising reports or change campaigns.",
-    "inputSchema": {
-      "type": "object",
-      "properties": {},
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
-    },
-    "annotations": {
-      "title": "List your Adlane workspaces",
-      "readOnlyHint": true,
-      "destructiveHint": false,
-      "idempotentHint": true,
-      "openWorldHint": false
-    }
-  }
+	{
+		"name": "get_campaign_details",
+		"title": "Read campaign configuration",
+		"description": "Browse campaign status and configuration in an owned connected account. Follow pagination to find a campaign; no changes are made.",
+		"inputSchema": {
+			"type": "object",
+			"properties": {
+				"accountId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"cursor": {
+					"type": "string",
+					"maxLength": 2048
+				}
+			},
+			"required": ["accountId"],
+			"additionalProperties": false,
+			"$schema": "http://json-schema.org/draft-07/schema#"
+		},
+		"annotations": {
+			"title": "Read campaign configuration",
+			"readOnlyHint": true,
+			"destructiveHint": false,
+			"idempotentHint": true,
+			"openWorldHint": false
+		}
+	},
+	{
+		"name": "get_campaign_performance",
+		"title": "Read campaign performance",
+		"description": "Read campaign metrics for explicit inclusive dates in account timezone. Google costs are micros; Meta spend is in account currency. Conversions are attributed and may overlap between providers. Follow the returned cursor.",
+		"inputSchema": {
+			"type": "object",
+			"properties": {
+				"accountId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"startDate": {
+					"type": "string",
+					"pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+				},
+				"endDate": {
+					"type": "string",
+					"pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+				},
+				"campaignId": {
+					"type": "string",
+					"pattern": "^\\d{1,30}$"
+				},
+				"cursor": {
+					"type": "string",
+					"maxLength": 2048
+				}
+			},
+			"required": ["accountId", "startDate", "endDate"],
+			"additionalProperties": false,
+			"$schema": "http://json-schema.org/draft-07/schema#"
+		},
+		"annotations": {
+			"title": "Read campaign performance",
+			"readOnlyHint": true,
+			"destructiveHint": false,
+			"idempotentHint": true,
+			"openWorldHint": false
+		}
+	},
+	{
+		"name": "get_profile",
+		"title": "Read your Adlane profile",
+		"description": "Read the signed-in customer's own Adlane account profile. Does not search for or identify other people.",
+		"inputSchema": {
+			"type": "object",
+			"properties": {},
+			"additionalProperties": false
+		},
+		"annotations": {
+			"title": "Read your Adlane profile",
+			"readOnlyHint": true,
+			"destructiveHint": false,
+			"idempotentHint": true,
+			"openWorldHint": false
+		}
+	},
+	{
+		"name": "list_ad_accounts",
+		"title": "List connected ad accounts",
+		"description": "Read your connected advertising accounts with currency and timezone. Choose an account ID before requesting reports.",
+		"inputSchema": {
+			"type": "object",
+			"properties": {
+				"offset": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 10000,
+					"default": 0
+				}
+			},
+			"additionalProperties": false,
+			"$schema": "http://json-schema.org/draft-07/schema#"
+		},
+		"annotations": {
+			"title": "List connected ad accounts",
+			"readOnlyHint": true,
+			"destructiveHint": false,
+			"idempotentHint": true,
+			"openWorldHint": false
+		}
+	},
+	{
+		"name": "list_workspaces",
+		"title": "List your Adlane workspaces",
+		"description": "List up to 100 advertising workspaces owned by the signed-in account. Does not fetch advertising reports or change campaigns.",
+		"inputSchema": {
+			"type": "object",
+			"properties": {},
+			"additionalProperties": false,
+			"$schema": "http://json-schema.org/draft-07/schema#"
+		},
+		"annotations": {
+			"title": "List your Adlane workspaces",
+			"readOnlyHint": true,
+			"destructiveHint": false,
+			"idempotentHint": true,
+			"openWorldHint": false
+		}
+	}
 ]
