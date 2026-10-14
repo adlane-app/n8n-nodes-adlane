@@ -9,14 +9,26 @@
 	},
 	"list_ad_accounts": {
 		"method": "GET",
-		"path": "/v1/ad-accounts"
+		"path": "/v1/ad-accounts",
+		"pagination": {
+			"items": ["accounts"],
+			"kind": "offset"
+		}
 	},
 	"get_campaign_details": {
 		"method": "GET",
-		"path": "/v1/ad-accounts/:accountId/campaigns"
+		"path": "/v1/ad-accounts/:accountId/campaigns",
+		"pagination": {
+			"items": ["data.results", "data.data"],
+			"kind": "cursor"
+		}
 	},
 	"get_campaign_performance": {
 		"method": "GET",
-		"path": "/v1/ad-accounts/:accountId/performance"
+		"path": "/v1/ad-accounts/:accountId/performance",
+		"pagination": {
+			"items": ["data.results", "data.data"],
+			"kind": "cursor"
+		}
 	}
 }

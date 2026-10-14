@@ -13,16 +13,26 @@ export class Adlane implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Adlane',
 		name: 'adlane',
-		icon: { light: 'file:adlane.svg', dark: 'file:adlane.svg' },
+		icon: {
+			light: 'file:adlane.svg',
+			dark: 'file:adlane.svg',
+		},
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description: 'Automate your Adlane account',
-		defaults: { name: 'Adlane' },
+		defaults: {
+			name: 'Adlane',
+		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		usableAsTool: true,
-		credentials: [{ name: 'adlaneOAuth2Api', required: true }],
+		credentials: [
+			{
+				name: 'adlaneOAuth2Api',
+				required: true,
+			},
+		],
 		properties: [
 			{
 				displayName: 'Resource',
@@ -76,7 +86,7 @@ export class Adlane implements INodeType {
 						name: 'Get Campaign Details',
 						value: 'get_campaign_details',
 						description:
-							'Browse campaign status and configuration in an owned connected account. Follow pagination to find a campaign; no changes are made.',
+							'Browse campaign status and configuration in an owned connected account. Browse campaigns; no changes are made.',
 						action: 'Get campaign details in adlane',
 					},
 					{
@@ -135,28 +145,6 @@ export class Adlane implements INodeType {
 						resource: ['ad-accounts'],
 					},
 				},
-			},
-			{
-				displayName: 'Additional Fields',
-				name: 'options_get_campaign_details',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_details'],
-						resource: ['ad-accounts'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Cursor',
-						name: 'cursor',
-						type: 'string',
-						default: '',
-						description: 'The cursor for this operation',
-					},
-				],
 			},
 			{
 				displayName: 'Account ID',
@@ -220,44 +208,104 @@ export class Adlane implements INodeType {
 						default: '',
 						description: 'The campaign ID for this operation',
 					},
-					{
-						displayName: 'Cursor',
-						name: 'cursor',
-						type: 'string',
-						default: '',
-						description: 'The cursor for this operation',
-					},
 				],
 			},
 			{
-				displayName: 'Additional Fields',
-				name: 'options_list_ad_accounts',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
+				displayName: 'Return All',
+				name: 'returnAll',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to return all results or only up to a given limit',
 				displayOptions: {
 					show: {
 						operation: ['list_ad_accounts'],
 						resource: ['ad-accounts'],
 					},
 				},
-				options: [
-					{
-						displayName: 'Offset',
-						name: 'offset',
-						type: 'number',
-						default: 0,
-						description: 'The offset for this operation',
-						typeOptions: {
-							minValue: 0,
-							maxValue: 10000,
-							numberPrecision: 0,
-						},
+			},
+			{
+				displayName: 'Limit',
+				name: 'limit',
+				type: 'number',
+				default: 50,
+				typeOptions: {
+					minValue: 1,
+					numberPrecision: 0,
+				},
+				description: 'Max number of results to return',
+				displayOptions: {
+					show: {
+						operation: ['list_ad_accounts'],
+						resource: ['ad-accounts'],
+						returnAll: [false],
 					},
-				],
+				},
+			},
+			{
+				displayName: 'Return All',
+				name: 'returnAll',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to return all results or only up to a given limit',
+				displayOptions: {
+					show: {
+						operation: ['get_campaign_details'],
+						resource: ['ad-accounts'],
+					},
+				},
+			},
+			{
+				displayName: 'Limit',
+				name: 'limit',
+				type: 'number',
+				default: 50,
+				typeOptions: {
+					minValue: 1,
+					numberPrecision: 0,
+				},
+				description: 'Max number of results to return',
+				displayOptions: {
+					show: {
+						operation: ['get_campaign_details'],
+						resource: ['ad-accounts'],
+						returnAll: [false],
+					},
+				},
+			},
+			{
+				displayName: 'Return All',
+				name: 'returnAll',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to return all results or only up to a given limit',
+				displayOptions: {
+					show: {
+						operation: ['get_campaign_performance'],
+						resource: ['ad-accounts'],
+					},
+				},
+			},
+			{
+				displayName: 'Limit',
+				name: 'limit',
+				type: 'number',
+				default: 50,
+				typeOptions: {
+					minValue: 1,
+					numberPrecision: 0,
+				},
+				description: 'Max number of results to return',
+				displayOptions: {
+					show: {
+						operation: ['get_campaign_performance'],
+						resource: ['ad-accounts'],
+						returnAll: [false],
+					},
+				},
 			},
 		],
 	};
+
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		return executeOperations(
 			this,
