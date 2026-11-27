@@ -107,10 +107,7 @@ test('encodes identifiers without exposing them as path or query structure', asy
 	const op = operations.find((o) => routes[o.name].path.includes(':'));
 	if (!op) return;
 	const key = routes[op.name].path.match(/:([A-Za-z][A-Za-z0-9]*)/)[1];
-	const { ctx, calls } = context(op, {
-		params: { [op.name + '__' + key]: 'owned?item#one' },
-		response: { statusCode: 200, body: { data: { results: [] } } },
-	});
+	const { ctx, calls } = context(op, { params: { [op.name + '__' + key]: 'owned?item#one' } });
 	await node.execute.call(ctx);
 	assert(calls[0].options.url.includes('owned%3Fitem%23one'));
 	assert.equal(new URL(calls[0].options.url).hash, '');
@@ -437,4 +434,70 @@ test('list controls are resolved by n8n without exposed transport tokens', () =>
 		const optional = props.find((p) => p.name === 'options_' + op);
 		assert(!optional?.options.some((p) => ['offset', 'cursor', 'page'].includes(p.name)));
 	}
+});
+
+test('readable product errors in a 2xx body fail the item instead of passing through', async () => {
+	const op = operations.find((o) => o.name === 'save_ad');
+	const { ctx } = context(op, {
+		response: {
+			statusCode: 201,
+			body: { error: 'Board not found.', status: 404 },
+		},
+	});
+	await assert.rejects(node.execute.call(ctx), /Board not found/);
+	const failed = context(op, {
+		response: {
+			statusCode: 201,
+			body: { error: 'Board not found.', status: 404 },
+		},
+		continueOnFail: true,
+	});
+	const result = await node.execute.call(failed.ctx);
+	assert.equal(result[0][0].json.error, 'Board not found.');
+});
+
+test('Search sends query, mode, platforms and country as query parameters of GET /v1/search', async () => {
+	const op = operations.find((o) => o.name === 'search_ads');
+	const { ctx, calls } = context(op, {
+		params: {
+			search_ads__query: 'allbirds.com',
+			options_search_ads: { mode: 'domain', platforms: ['meta', 'tiktok'], country: 'US' },
+		},
+	});
+	await node.execute.call(ctx);
+	const url = new URL(calls[0].options.url);
+	assert.equal(url.pathname, '/v1/search');
+	assert.equal(url.searchParams.get('query'), 'allbirds.com');
+	assert.equal(url.searchParams.get('mode'), 'domain');
+	assert.deepEqual(JSON.parse(url.searchParams.get('platforms')), ['meta', 'tiktok']);
+	assert.equal(url.searchParams.get('country'), 'US');
+	const empty = context(op, {
+		params: { search_ads__query: 'running shoes', options_search_ads: { platforms: [] } },
+	});
+	await node.execute.call(empty.ctx);
+	assert.equal(new URL(empty.calls[0].options.url).searchParams.has('platforms'), false);
+});
+
+test('Save Ad puts the board in the path and the search_id, ad_key and note in the JSON body', async () => {
+	const op = operations.find((o) => o.name === 'save_ad');
+	const { ctx, calls } = context(op, {
+		params: {
+			save_ad__boardId: '5a3d1e70-0000-4000-8000-00000000b001',
+			save_ad__search_id: '5a3d1e70-0000-4000-8000-00000000ad01',
+			save_ad__ad_key: 'meta:1335285412043498',
+			options_save_ad: { note: 'Strong hook' },
+		},
+	});
+	await node.execute.call(ctx);
+	const { options } = calls[0];
+	assert.equal(options.method, 'POST');
+	assert.equal(
+		new URL(options.url).pathname,
+		'/v1/boards/5a3d1e70-0000-4000-8000-00000000b001/ads',
+	);
+	assert.deepEqual(options.body, {
+		search_id: '5a3d1e70-0000-4000-8000-00000000ad01',
+		ad_key: 'meta:1335285412043498',
+		note: 'Strong hook',
+	});
 });

@@ -1,0 +1,110 @@
+{
+	"name": "Adlane: save a competitor's newest ad to a board",
+	"nodes": [
+		{
+			"parameters": {},
+			"id": "manual",
+			"name": "Manual Trigger",
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [0, 0]
+		},
+		{
+			"parameters": {
+				"resource": "ad",
+				"operation": "search_ads",
+				"search_ads__query": "allbirds.com",
+				"options_search_ads": {
+					"mode": "domain",
+					"platforms": ["meta", "tiktok", "google"]
+				}
+			},
+			"id": "search",
+			"name": "Search ads",
+			"type": "n8n-nodes-adlane.adlane",
+			"typeVersion": 1,
+			"position": [240, 0],
+			"credentials": {
+				"adlaneOAuth2Api": {
+					"id": "",
+					"name": "Adlane account"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "board",
+				"operation": "list_boards"
+			},
+			"id": "boards",
+			"name": "Get boards",
+			"type": "n8n-nodes-adlane.adlane",
+			"typeVersion": 1,
+			"position": [480, 0],
+			"credentials": {
+				"adlaneOAuth2Api": {
+					"id": "",
+					"name": "Adlane account"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "board",
+				"operation": "save_ad",
+				"save_ad__boardId": "={{ $json.boards[0].id }}",
+				"save_ad__search_id": "={{ $('Search ads').item.json.search_id }}",
+				"save_ad__ad_key": "={{ $('Search ads').item.json.results.flatMap(r => r.ads).sort((a, b) => (b.started || '').localeCompare(a.started || ''))[0].ad_key }}",
+				"options_save_ad": {
+					"note": "Newest ad from the weekly competitor check"
+				}
+			},
+			"id": "save",
+			"name": "Save newest ad",
+			"type": "n8n-nodes-adlane.adlane",
+			"typeVersion": 1,
+			"position": [720, 0],
+			"credentials": {
+				"adlaneOAuth2Api": {
+					"id": "",
+					"name": "Adlane account"
+				}
+			}
+		}
+	],
+	"connections": {
+		"Manual Trigger": {
+			"main": [
+				[
+					{
+						"node": "Search ads",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Search ads": {
+			"main": [
+				[
+					{
+						"node": "Get boards",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Get boards": {
+			"main": [
+				[
+					{
+						"node": "Save newest ad",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	}
+}

@@ -1,15 +1,21 @@
 {
 	"name": "n8n-nodes-adlane",
-	"version": "3.2.0",
-	"description": "n8n community node for Adlane, the ad library search and competitor ads tool: read your Adlane account, workspaces and connected ad accounts over the REST API.",
+	"version": "4.0.0",
+	"description": "Ad library search for n8n by Adlane: see competitor ads on Meta, TikTok, LinkedIn and Google at once, save ad creative to boards and track competitors with the Adlane REST API.",
 	"license": "MIT",
 	"homepage": "https://adlane.app",
 	"keywords": [
 		"n8n-community-node-package",
 		"n8n",
 		"adlane",
-		"oauth",
-		"automation"
+		"ad-library",
+		"ad-library-search",
+		"competitor-ads",
+		"ad-spy",
+		"ad-creative",
+		"ad-intelligence",
+		"meta-ad-library",
+		"competitor-research"
 	],
 	"author": {
 		"name": "Adlane",

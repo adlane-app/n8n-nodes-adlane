@@ -1,34 +1,34 @@
 {
-	"get_profile": {
+	"search_ads": {
 		"method": "GET",
-		"path": "/v1/account"
+		"path": "/v1/search"
 	},
-	"list_workspaces": {
+	"get_usage": {
 		"method": "GET",
-		"path": "/v1/workspaces"
+		"path": "/v1/usage"
 	},
-	"list_ad_accounts": {
+	"list_boards": {
 		"method": "GET",
-		"path": "/v1/ad-accounts",
-		"pagination": {
-			"items": ["accounts"],
-			"kind": "offset"
-		}
+		"path": "/v1/boards"
 	},
-	"get_campaign_details": {
+	"get_board": {
 		"method": "GET",
-		"path": "/v1/ad-accounts/:accountId/campaigns",
-		"pagination": {
-			"items": ["data.results", "data.data"],
-			"kind": "cursor"
-		}
+		"path": "/v1/boards/:boardId"
 	},
-	"get_campaign_performance": {
+	"create_board": {
+		"method": "POST",
+		"path": "/v1/boards"
+	},
+	"save_ad": {
+		"method": "POST",
+		"path": "/v1/boards/:boardId/ads"
+	},
+	"list_competitors": {
 		"method": "GET",
-		"path": "/v1/ad-accounts/:accountId/performance",
-		"pagination": {
-			"items": ["data.results", "data.data"],
-			"kind": "cursor"
-		}
+		"path": "/v1/competitors"
+	},
+	"track_competitor": {
+		"method": "POST",
+		"path": "/v1/competitors"
 	}
 }

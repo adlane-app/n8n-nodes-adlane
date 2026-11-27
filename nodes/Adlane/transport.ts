@@ -31,7 +31,13 @@ export function parseArgument(
 		value = schema.default;
 	const type = Array.isArray(schema.type) ? schema.type.find((t) => t !== 'null') : schema.type;
 	if (value === null && Array.isArray(schema.type) && schema.type.includes('null')) return null;
-	if (value === undefined || value === null || value === '') {
+	// An empty multi-select (for example Platforms) means the API default.
+	if (
+		value === undefined ||
+		value === null ||
+		value === '' ||
+		(Array.isArray(value) && !value.length)
+	) {
 		if (required) throw new Error(`${name} is required`);
 		return undefined;
 	}
@@ -96,7 +102,7 @@ async function requestJson(
 		throw new NodeOperationError(
 			ctx.getNode(),
 			typeof status === 'number'
-				? `API request failed (HTTP ${status}). Reconnect for 401/403; check plan limits for 429.`
+				? `API request failed (HTTP ${status}). Reconnect for 401/403; check your Adlane plan for 402/429.`
 				: 'The API request failed. Check the connection and permissions.',
 		);
 	}
@@ -295,6 +301,9 @@ export async function executeOperations(
 				body && typeof body === 'object' && !Array.isArray(body)
 					? (body as IDataObject)
 					: ({ data: body } as IDataObject);
+			// Product answers such as a plan limit or an unknown board come back as a readable error field.
+			if (typeof json.error === 'string')
+				throw new NodeOperationError(ctx.getNode(), json.error.slice(0, 300));
 			output.push({ json, pairedItem: { item: i } });
 		} catch (error) {
 			const message = error instanceof Error ? error.message : 'Operation failed';

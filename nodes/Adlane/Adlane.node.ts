@@ -9,6 +9,13 @@ import { executeOperations, type Operation, type ResourceRoute } from './transpo
 import operations from './operations.json';
 import routes from './routes.json';
 
+const platformOptions = [
+	{ name: 'Google', value: 'google' },
+	{ name: 'LinkedIn', value: 'linkedin' },
+	{ name: 'Meta', value: 'meta' },
+	{ name: 'TikTok', value: 'tiktok' },
+];
+
 export class Adlane implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Adlane',
@@ -20,7 +27,8 @@ export class Adlane implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
-		description: 'Automate your Adlane account',
+		description:
+			'Ad library search: competitor ads on Meta, TikTok, LinkedIn and Google, saved-ad boards and competitor tracking',
 		defaults: {
 			name: 'Adlane',
 		},
@@ -40,20 +48,12 @@ export class Adlane implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{
-						name: 'Account',
-						value: 'account',
-					},
-					{
-						name: 'Advertising Account',
-						value: 'ad-accounts',
-					},
-					{
-						name: 'Workspace',
-						value: 'workspaces',
-					},
+					{ name: 'Account', value: 'account' },
+					{ name: 'Ad', value: 'ad' },
+					{ name: 'Board', value: 'board' },
+					{ name: 'Competitor', value: 'competitor' },
 				],
-				default: 'account',
+				default: 'ad',
 			},
 			{
 				displayName: 'Operation',
@@ -62,19 +62,14 @@ export class Adlane implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Get Profile',
-						value: 'get_profile',
-						description:
-							"Read the signed-in customer's own Adlane account profile. Does not search for or identify other people.",
-						action: 'Get profile in adlane',
+						name: 'Get Usage',
+						value: 'get_usage',
+						description: 'Your plan, searches used and left, and board and competitor limits',
+						action: 'Get plan and usage',
 					},
 				],
-				default: 'get_profile',
-				displayOptions: {
-					show: {
-						resource: ['account'],
-					},
-				},
+				default: 'get_usage',
+				displayOptions: { show: { resource: ['account'] } },
 			},
 			{
 				displayName: 'Operation',
@@ -83,33 +78,15 @@ export class Adlane implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Get Campaign Details',
-						value: 'get_campaign_details',
+						name: 'Search',
+						value: 'search_ads',
 						description:
-							'Browse campaign status and configuration in an owned connected account. Browse campaigns; no changes are made.',
-						action: 'Get campaign details in adlane',
-					},
-					{
-						name: 'Get Campaign Performance',
-						value: 'get_campaign_performance',
-						description:
-							'Read campaign metrics for explicit inclusive dates in account timezone. Google costs are micros; Meta spend is in account currency. Conversions are attributed and may overlap between providers. Follow the returned cursor',
-						action: 'Get campaign performance in adlane',
-					},
-					{
-						name: 'List Ad Accounts',
-						value: 'list_ad_accounts',
-						description:
-							'Read your connected advertising accounts with currency and timezone. Choose an account ID before requesting reports.',
-						action: 'List ad accounts in adlane',
+							'Search the Meta, TikTok, LinkedIn and Google ad libraries at once by keyword, advertiser or domain. Uses one search from your plan.',
+						action: 'Search ad libraries',
 					},
 				],
-				default: 'get_campaign_details',
-				displayOptions: {
-					show: {
-						resource: ['ad-accounts'],
-					},
-				},
+				default: 'search_ads',
+				displayOptions: { show: { resource: ['ad'] } },
 			},
 			{
 				displayName: 'Operation',
@@ -118,190 +95,206 @@ export class Adlane implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'List Workspaces',
-						value: 'list_workspaces',
-						description:
-							'List up to 100 advertising workspaces owned by the signed-in account. Does not fetch advertising reports or change campaigns.',
-						action: 'List workspaces in adlane',
+						name: 'Create',
+						value: 'create_board',
+						description: 'Create a board for saved ads',
+						action: 'Create a board',
+					},
+					{
+						name: 'Get',
+						value: 'get_board',
+						description: 'Read the ads saved on one board, with your notes',
+						action: 'Get a board',
+					},
+					{
+						name: 'Get Many',
+						value: 'list_boards',
+						description: 'List your boards with ad counts',
+						action: 'Get many boards',
+					},
+					{
+						name: 'Save Ad',
+						value: 'save_ad',
+						description: 'Save one ad from a Search result to a board, with an optional note',
+						action: 'Save an ad to a board',
 					},
 				],
-				default: 'list_workspaces',
-				displayOptions: {
-					show: {
-						resource: ['workspaces'],
-					},
-				},
+				default: 'list_boards',
+				displayOptions: { show: { resource: ['board'] } },
 			},
 			{
-				displayName: 'Account ID',
-				name: 'get_campaign_details__accountId',
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				options: [
+					{
+						name: 'Get Many',
+						value: 'list_competitors',
+						description: 'List tracked competitors with total and new ad counts',
+						action: 'Get many competitors',
+					},
+					{
+						name: 'Track',
+						value: 'track_competitor',
+						description: 'Start tracking a competitor; Adlane checks their ads now',
+						action: 'Track a competitor',
+					},
+				],
+				default: 'list_competitors',
+				displayOptions: { show: { resource: ['competitor'] } },
+			},
+			{
+				displayName: 'Query',
+				name: 'search_ads__query',
 				type: 'string',
 				default: '',
 				required: true,
-				description: 'The account ID for this operation',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_details'],
-						resource: ['ad-accounts'],
-					},
-				},
+				placeholder: 'allbirds.com',
+				description:
+					'Keyword, advertiser name or website domain, for example running shoes, Allbirds or allbirds.com',
+				displayOptions: { show: { operation: ['search_ads'], resource: ['ad'] } },
 			},
 			{
-				displayName: 'Account ID',
-				name: 'get_campaign_performance__accountId',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The account ID for this operation',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-					},
-				},
-			},
-			{
-				displayName: 'Start Date',
-				name: 'get_campaign_performance__startDate',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The start date for this operation',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-					},
-				},
-			},
-			{
-				displayName: 'End Date',
-				name: 'get_campaign_performance__endDate',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The end date for this operation',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-					},
-				},
-			},
-			{
-				displayName: 'Additional Fields',
-				name: 'options_get_campaign_performance',
+				displayName: 'Options',
+				name: 'options_search_ads',
 				type: 'collection',
-				placeholder: 'Add Field',
+				placeholder: 'Add Option',
 				default: {},
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-					},
-				},
+				displayOptions: { show: { operation: ['search_ads'], resource: ['ad'] } },
 				options: [
 					{
-						displayName: 'Campaign ID',
-						name: 'campaignId',
+						displayName: 'Country Code',
+						name: 'country',
 						type: 'string',
 						default: '',
-						description: 'The campaign ID for this operation',
+						placeholder: 'US',
+						description:
+							'Two-letter country code for Meta, LinkedIn and Google. Leave empty for all countries.',
+					},
+					{
+						displayName: 'Mode',
+						name: 'mode',
+						type: 'options',
+						options: [
+							{ name: 'Advertiser', value: 'advertiser' },
+							{ name: 'Domain', value: 'domain' },
+							{ name: 'Keyword', value: 'keyword' },
+						],
+						default: 'domain',
+						description:
+							'How to read the query. Google searches by advertiser or domain only. Without this option, a domain is searched as a domain and anything else as a keyword.',
+					},
+					{
+						displayName: 'Platforms',
+						name: 'platforms',
+						type: 'multiOptions',
+						options: platformOptions,
+						default: [],
+						description: 'Ad libraries to search. Leave empty for all four.',
 					},
 				],
 			},
 			{
-				displayName: 'Return All',
-				name: 'returnAll',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to return all results or only up to a given limit',
-				displayOptions: {
-					show: {
-						operation: ['list_ad_accounts'],
-						resource: ['ad-accounts'],
-					},
-				},
+				displayName: 'Board ID',
+				name: 'get_board__boardId',
+				type: 'string',
+				default: '',
+				required: true,
+				description: 'The board ID from Board → Get Many or Create',
+				displayOptions: { show: { operation: ['get_board'], resource: ['board'] } },
 			},
 			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				default: 50,
-				typeOptions: {
-					minValue: 1,
-					numberPrecision: 0,
-				},
-				description: 'Max number of results to return',
-				displayOptions: {
-					show: {
-						operation: ['list_ad_accounts'],
-						resource: ['ad-accounts'],
-						returnAll: [false],
-					},
-				},
+				displayName: 'Name',
+				name: 'create_board__name',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'Swipe file',
+				description: 'Board name, up to 80 characters',
+				displayOptions: { show: { operation: ['create_board'], resource: ['board'] } },
 			},
 			{
-				displayName: 'Return All',
-				name: 'returnAll',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to return all results or only up to a given limit',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_details'],
-						resource: ['ad-accounts'],
-					},
-				},
+				displayName: 'Board ID',
+				name: 'save_ad__boardId',
+				type: 'string',
+				default: '',
+				required: true,
+				description: 'The board ID from Board → Get Many or Create',
+				displayOptions: { show: { operation: ['save_ad'], resource: ['board'] } },
 			},
 			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				default: 50,
-				typeOptions: {
-					minValue: 1,
-					numberPrecision: 0,
-				},
-				description: 'Max number of results to return',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_details'],
-						resource: ['ad-accounts'],
-						returnAll: [false],
-					},
-				},
+				displayName: 'Search ID',
+				name: 'save_ad__search_id',
+				type: 'string',
+				default: '',
+				required: true,
+				description: 'The search_id from the Ad → Search output',
+				displayOptions: { show: { operation: ['save_ad'], resource: ['board'] } },
 			},
 			{
-				displayName: 'Return All',
-				name: 'returnAll',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to return all results or only up to a given limit',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-					},
-				},
+				displayName: 'Ad Key',
+				name: 'save_ad__ad_key',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'meta:1335285412043498',
+				description: 'The ad_key of one ad in that search',
+				displayOptions: { show: { operation: ['save_ad'], resource: ['board'] } },
 			},
 			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				default: 50,
-				typeOptions: {
-					minValue: 1,
-					numberPrecision: 0,
-				},
-				description: 'Max number of results to return',
-				displayOptions: {
-					show: {
-						operation: ['get_campaign_performance'],
-						resource: ['ad-accounts'],
-						returnAll: [false],
+				displayName: 'Options',
+				name: 'options_save_ad',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: { show: { operation: ['save_ad'], resource: ['board'] } },
+				options: [
+					{
+						displayName: 'Note',
+						name: 'note',
+						type: 'string',
+						default: '',
+						typeOptions: { rows: 2 },
+						description: 'Note saved with the ad, up to 1000 characters',
 					},
-				},
+				],
+			},
+			{
+				displayName: 'Name',
+				name: 'track_competitor__name',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'Allbirds',
+				description: 'Competitor or brand name',
+				displayOptions: { show: { operation: ['track_competitor'], resource: ['competitor'] } },
+			},
+			{
+				displayName: 'Options',
+				name: 'options_track_competitor',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: { show: { operation: ['track_competitor'], resource: ['competitor'] } },
+				options: [
+					{
+						displayName: 'Domain',
+						name: 'domain',
+						type: 'string',
+						default: '',
+						placeholder: 'allbirds.com',
+						description: 'Website domain, needed for Google',
+					},
+					{
+						displayName: 'Platforms',
+						name: 'platforms',
+						type: 'multiOptions',
+						options: platformOptions,
+						default: [],
+						description: 'Ad libraries to watch. Leave empty for all four.',
+					},
+				],
 			},
 		],
 	};
