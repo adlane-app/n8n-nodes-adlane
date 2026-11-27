@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-adlane",
 	"version": "3.2.0",
-	"description": "Native Adlane REST API integration for n8n workflows.",
+	"description": "n8n community node for Adlane, the ad library search and competitor ads tool: read your Adlane account, workspaces and connected ad accounts over the REST API.",
 	"license": "MIT",
 	"homepage": "https://adlane.app",
 	"keywords": [
@@ -14,7 +14,7 @@
 	"author": {
 		"name": "Adlane",
 		"url": "https://adlane.app",
-		"email": "support@mail.adlane.app"
+		"email": "support@adlane.app"
 	},
 	"repository": {
 		"type": "git",

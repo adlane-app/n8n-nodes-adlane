@@ -1,6 +1,6 @@
 # Adlane for n8n
 
-Build workflows with the [Adlane](https://adlane.app) REST API. This community node sends ordinary HTTP resource requests and returns JSON responses. It does not connect to an MCP server or use JSON-RPC.
+Build n8n workflows with the REST API of [Adlane](https://adlane.app), the ad library search and competitor ads tool. This community node sends ordinary HTTP resource requests and returns JSON responses. It does not connect to an MCP server or use JSON-RPC.
 
 ## Installation
 
